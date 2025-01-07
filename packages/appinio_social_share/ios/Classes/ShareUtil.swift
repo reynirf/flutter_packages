@@ -427,66 +427,74 @@ public class ShareUtil{
         result(SUCCESS)
     }
     
-    public func shareToFacebookStory(args : [String: Any?],result: @escaping FlutterResult) {
-        let appId = args[self.argAppId] as? String
-        let imagePath = args[self.argbackgroundImage] as? String
-        let argVideoFile = args[self.argVideoFile] as? String
-        let imagePathSticker = args[self.argstickerImage] as? String
-        let backgroundTopColor = args[self.argBackgroundTopColor] as? String
-        let backgroundBottomColor =  args[self.argBackgroundBottomColor] as? String
-        let attributionURL =  args[self.argAttributionURL] as? String
+    public func shareToFacebookStory(args: [String: Any?], result: @escaping FlutterResult) {
+    let appId = args[self.argAppId] as? String
+    let imagePath = args[self.argbackgroundImage] as? String
+    let argVideoFile = args[self.argVideoFile] as? String
+    let imagePathSticker = args[self.argstickerImage] as? String
+    let backgroundTopColor = args[self.argBackgroundTopColor] as? String
+    let backgroundBottomColor = args[self.argBackgroundBottomColor] as? String
+    let attributionURL = args[self.argAttributionURL] as? String
 
-    
-        guard let facebookURL = URL(string: "facebook-stories://share") else {
-            result(ERROR_APP_NOT_AVAILABLE)
-            return
-        }
-        
-        
-        if (UIApplication.shared.canOpenURL(facebookURL)) {
-            var pasteboardItems = [
-                "com.facebook.sharedSticker.attributionURL": [attributionURL ?? ""],
-                "com.facebook.sharedSticker.backgroundTopColor": backgroundTopColor ?? "",
-                "com.facebook.sharedSticker.backgroundBottomColor": backgroundBottomColor ?? "",
-                "com.facebook.sharedSticker.appID": appId as Any,
-            ]
-            var backgroundImage: UIImage?;
-            if(!(imagePath==nil)){
-                backgroundImage =  UIImage.init(contentsOfFile: imagePath!)
-                if (backgroundImage != nil) {
-                     pasteboardItems["com.facebook.sharedSticker.backgroundImage"] = backgroundImage
-                 }
-            }
-            var stickerImage: UIImage?;
-            if(!(imagePathSticker==nil)){
-                stickerImage =  UIImage.init(contentsOfFile: imagePathSticker!)
-                if (stickerImage != nil) {
-                    pasteboardItems["com.facebook.sharedSticker.stickerImage"] = stickerImage
-                }
-            }
-            var backgroundVideoData:Any?;
-            if(!(argVideoFile==nil)){
-                let backgroundVideoUrl = URL(fileURLWithPath: argVideoFile!)
-                backgroundVideoData = try? Data(contentsOf: backgroundVideoUrl)
-                if (backgroundVideoData != nil) {
-                    pasteboardItems["com.facebook.sharedSticker.backgroundVideo"] = backgroundVideoData
-                }
-            }
-
-
-                if #available(iOS 10, *){
-                    let pasteboardOptions = [
-                        UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)
-                    ]
-                    UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
-                    UIApplication.shared.open(facebookURL, options: [:])
-                }
-                result(self.SUCCESS)
-                return
-        } else {
-            result(ERROR_APP_NOT_AVAILABLE)
-        }
+    guard let facebookURL = URL(string: "facebook-stories://share") else {
+        result(ERROR_APP_NOT_AVAILABLE)
+        return
     }
+
+    if UIApplication.shared.canOpenURL(facebookURL) {
+        var pasteboardItems: [String: Any] = [:]
+
+        // Add mandatory keys
+        if let attributionURL = attributionURL, !attributionURL.isEmpty {
+            pasteboardItems["com.facebook.sharedSticker.attributionURL"] = attributionURL
+        }
+        if let backgroundTopColor = backgroundTopColor, !backgroundTopColor.isEmpty {
+            pasteboardItems["com.facebook.sharedSticker.backgroundTopColor"] = backgroundTopColor
+        }
+        if let backgroundBottomColor = backgroundBottomColor, !backgroundBottomColor.isEmpty {
+            pasteboardItems["com.facebook.sharedSticker.backgroundBottomColor"] = backgroundBottomColor
+        }
+        if let appId = appId, !appId.isEmpty {
+            pasteboardItems["com.facebook.sharedSticker.appID"] = appId
+        }
+
+        // Add image for the background if available
+        if let imagePath = imagePath,
+           let backgroundImage = UIImage(contentsOfFile: imagePath),
+           let backgroundImageData = backgroundImage.pngData() {
+            pasteboardItems["com.facebook.sharedSticker.backgroundImage"] = backgroundImageData
+        }
+
+        // Add sticker image if available
+        if let imagePathSticker = imagePathSticker,
+           let stickerImage = UIImage(contentsOfFile: imagePathSticker),
+           let stickerImageData = stickerImage.pngData() {
+            pasteboardItems["com.facebook.sharedSticker.stickerImage"] = stickerImageData
+        }
+
+        // Add video if available
+        if let argVideoFile = argVideoFile,
+           let backgroundVideoData = try? Data(contentsOf: URL(fileURLWithPath: argVideoFile)) {
+            pasteboardItems["com.facebook.sharedSticker.backgroundVideo"] = backgroundVideoData
+        }
+
+        // Add to UIPasteboard with expiration
+        if #available(iOS 10.0, *) {
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [
+                .expirationDate: Date().addingTimeInterval(60 * 5)
+            ]
+            UIPasteboard.general.setItems([pasteboardItems], options: pasteboardOptions)
+
+            // Open Facebook Stories
+            UIApplication.shared.open(facebookURL, options: [:], completionHandler: nil)
+            result(self.SUCCESS)
+        } else {
+            result("ERROR: Unsupported iOS version")
+        }
+    } else {
+        result(ERROR_APP_NOT_AVAILABLE)
+    }
+}
     
     
     func shareToTwitter(args : [String: Any?],result: @escaping FlutterResult) {
@@ -520,7 +528,7 @@ public class ShareUtil{
             let argVideoFile = args[self.argVideoFile] as? String
             let imagePathSticker = args[self.argstickerImage] as? String
             let backgroundTopColor = args[self.argBackgroundTopColor] as? String
-            let backgroundBottomColor =  args[self.argBackgroundBottomColor] as? String
+            let backgroundBottomColor: String? =  args[self.argBackgroundBottomColor] as? String
             let attributionURL =  args[self.argAttributionURL] as? String
 
             let linkText =  args[self.argLinkText] as? String
