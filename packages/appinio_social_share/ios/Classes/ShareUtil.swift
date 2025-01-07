@@ -26,6 +26,8 @@ public class ShareUtil{
     let argBackgroundBottomColor: String  = "backgroundBottomColor";
     let argImages: String  = "images";
     let argVideoFile: String  = "videoFile";
+    let argLinkText: String = "linkText";
+    let argLinkUrl: String = "linkUrl";
 
 
     
