@@ -53,25 +53,41 @@ class Android {
     return AppinioSocialSharePlatform.instance.copyToClipBoard(message);
   }
 
+  /// Sharing photos with hashtag.
+  /// It does not allow sharing just a hastag without photos.
   Future<String> shareToFacebook(String hashtag, List<String> filePaths) {
     return AppinioSocialSharePlatform.instance
         .shareToFacebook(hashtag, filePaths);
   }
 
-  Future<String> shareToInstagramStory(String appId,
-      {String? stickerImage,
-      String? backgroundImage,
-      String? backgroundVideo,
-      String? backgroundTopColor,
-      String? backgroundBottomColor,
-      String? attributionURL}) {
-    return AppinioSocialSharePlatform.instance.shareToInstagramStory(appId,
-        stickerImage: stickerImage,
-        backgroundImage: backgroundImage,
-        backgroundVideo: backgroundVideo,
-        backgroundTopColor: backgroundTopColor,
-        backgroundBottomColor: backgroundBottomColor,
-        attributionURL: attributionURL);
+  /// Sharing link.
+  /// It must be in format of URL. Plain text won't work.
+  Future<String> shareLinkToFacebook(String link) {
+    return AppinioSocialSharePlatform.instance.shareLinkToFacebook(link);
+  }
+
+  Future<String> shareToInstagramStory(
+    String appId, {
+    String? stickerImage,
+    String? backgroundImage,
+    String? backgroundVideo,
+    String? backgroundTopColor,
+    String? backgroundBottomColor,
+    String? attributionURL,
+    String? linkText,
+    String? linkUrl,
+  }) {
+    return AppinioSocialSharePlatform.instance.shareToInstagramStory(
+      appId,
+      stickerImage: stickerImage,
+      backgroundImage: backgroundImage,
+      backgroundVideo: backgroundVideo,
+      backgroundTopColor: backgroundTopColor,
+      backgroundBottomColor: backgroundBottomColor,
+      attributionURL: attributionURL,
+      linkText: linkText,
+      linkUrl: linkUrl,
+    );
   }
 
   Future<String> shareToFacebookStory(String appId,

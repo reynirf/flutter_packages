@@ -317,6 +317,27 @@ public class ShareUtil{
         result(self.SUCCESS)
         
     }
+
+    func shareLinkToFacebook(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate) {
+        let message = args[self.argMessage] as? String
+
+        guard let url = URL(string: message ?? "") else {
+            result(ERROR)
+            return
+        }
+
+        let content = ShareLinkContent()
+        content.contentURL = url
+
+        let dialog = ShareDialog(
+            viewController: UIApplication.shared.windows.first!.rootViewController,
+            content: content,
+            delegate: delegate
+        )
+        dialog.show()
+        result(self.SUCCESS)
+    }
+
     
     
     func shareToTelegram(args : [String: Any?],result: @escaping FlutterResult) {
@@ -500,6 +521,9 @@ public class ShareUtil{
             let backgroundBottomColor =  args[self.argBackgroundBottomColor] as? String
             let attributionURL =  args[self.argAttributionURL] as? String
 
+            let linkText =  args[self.argLinkText] as? String
+            let linkUrl =  args[self.argLinkUrl] as? String
+
             
             guard let instagramURL = URL(string: "instagram-stories://share?source_application=\(appId!)") else {
                 result(ERROR_APP_NOT_AVAILABLE)
@@ -529,6 +553,8 @@ public class ShareUtil{
                         "com.instagram.sharedSticker.backgroundImage": backgroundImage ?? "",
                         "com.instagram.sharedSticker.backgroundTopColor": backgroundTopColor ?? "",
                         "com.instagram.sharedSticker.backgroundBottomColor": backgroundBottomColor ?? "",
+                        "com.instagram.sharedSticker.linkText": linkText ?? "",
+                        "com.instagram.sharedSticker.linkURL": linkUrl ?? "",
                     ]
                 ]
                 let pasteboardOptions = [

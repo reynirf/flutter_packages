@@ -23,6 +23,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -181,7 +182,7 @@ public class SocialShareUtil {
         try {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // TODO: Maybe set to addFlags() if setFlags() it doesn't work
             intent.setAction(Intent.ACTION_SEND);
             if (filePath != null) {
                 Uri fileUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", new File(filePath));
@@ -196,7 +197,7 @@ public class SocialShareUtil {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Intent chooserIntent = Intent.createChooser(intent, chooserTitle);
             chooserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // TODO: Maybe set to addFlags() if setFlags() it doesn't work
             activity.startActivity(chooserIntent);
             return SUCCESS;
         } catch (Exception e) {
@@ -229,6 +230,8 @@ public class SocialShareUtil {
             shareIntent.putExtra("content_url", attributionURL);
             shareIntent.putExtra("top_background_color", backgroundTopColor);
             shareIntent.putExtra("bottom_background_color", backgroundBottomColor);
+            shareIntent.putExtra("link_text", linkText);
+            shareIntent.putExtra("link_url", linkUrl);
             activity.startActivity(shareIntent);
             return SUCCESS;
         } catch (Exception e) {
@@ -271,6 +274,39 @@ public class SocialShareUtil {
                 .setPhotos(sharePhotos)
                 .build();
         if (ShareDialog.canShow(SharePhotoContent.class)) {
+            shareDialog.show(content);
+        }
+    }
+
+    public void shareLinkToFacebook(String link, Activity activity, MethodChannel.Result result) {
+        FacebookSdk.fullyInitialize();
+        FacebookSdk.setApplicationId(getFacebookAppId(activity));
+        callbackManager = callbackManager == null ? CallbackManager.Factory.create() : callbackManager;
+        ShareDialog shareDialog = new ShareDialog(activity);
+        shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result1) {
+                System.out.println("---------------onSuccess");
+                result.success(SUCCESS);
+            }
+
+            @Override
+            public void onCancel() {
+                result.success(ERROR_CANCELLED);
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                System.out.println("---------------onError");
+                result.success(error.getLocalizedMessage());
+            }
+        });
+
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(link))
+                .build();
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
             shareDialog.show(content);
         }
     }
