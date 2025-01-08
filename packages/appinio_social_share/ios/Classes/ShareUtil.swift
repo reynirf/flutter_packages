@@ -319,7 +319,7 @@ public class ShareUtil{
         result(self.SUCCESS)
     }
 
-    func shareLinkToFacebook(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate) {
+    func shareLinkToFacebook(args: [String: Any?], result: @escaping FlutterResult, delegate: SharingDelegate) {
         var components = URLComponents(string: "https://www.facebook.com/sharer/sharer.php")!
         let message = args[self.argMessage] as? String
 
@@ -329,10 +329,14 @@ public class ShareUtil{
         }
 
         components.queryItems = [
-            URLQueryItem(name: "u", value: url),
+            URLQueryItem(name: "u", value: url.absoluteString),
         ]
-        if let url = components.url {
-            UIApplication.shared.open(url)
+
+        if let finalURL = components.url {
+            UIApplication.shared.open(finalURL, options: [:], completionHandler: nil)
+            result(SUCCESS)
+        } else {
+            result(ERROR)
         }
     }
 
