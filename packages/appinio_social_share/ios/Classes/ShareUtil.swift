@@ -317,10 +317,10 @@ public class ShareUtil{
         }
         dialog.show()
         result(self.SUCCESS)
-        
     }
 
     func shareLinkToFacebook(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate) {
+        var components = URLComponents(string: "https://www.facebook.com/sharer/sharer.php")!
         let message = args[self.argMessage] as? String
 
         guard let url = URL(string: message ?? "") else {
@@ -328,17 +328,33 @@ public class ShareUtil{
             return
         }
 
-        let content = ShareLinkContent()
-        content.contentURL = url
-
-        let dialog = ShareDialog(
-            viewController: UIApplication.shared.windows.first!.rootViewController,
-            content: content,
-            delegate: delegate
-        )
-        dialog.show()
-        result(self.SUCCESS)
+        components.queryItems = [
+            URLQueryItem(name: "u", value: url),
+        ]
+        if let url = components.url {
+            UIApplication.shared.open(url)
+        }
     }
+
+    // func shareLinkToFacebook(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate) {
+        // let message = args[self.argMessage] as? String
+
+        // guard let url = URL(string: message ?? "") else {
+        //     result(ERROR)
+        //     return
+        // }
+
+    //     let content = ShareLinkContent()
+    //     content.contentURL = url
+
+    //     let dialog = ShareDialog(
+    //         viewController: UIApplication.shared.windows.first!.rootViewController,
+    //         content: content,
+    //         delegate: delegate
+    //     )
+    //     dialog.show()
+    //     result(self.SUCCESS)
+    // }
 
     
     
