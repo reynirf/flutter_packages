@@ -206,7 +206,7 @@ public class SocialShareUtil {
     }
 
 
-    public String shareToInstagramStory(String appId, String stickerImage, String backgroundImage, String backgroundTopColor, String backgroundBottomColor, String attributionURL, Context activity) {
+    public String shareToInstagramStory(String appId, String stickerImage, String backgroundImage, String backgroundTopColor, String backgroundBottomColor, String attributionURL, String linkText, String linkUrl, Context activity) {
 
         try {
 
