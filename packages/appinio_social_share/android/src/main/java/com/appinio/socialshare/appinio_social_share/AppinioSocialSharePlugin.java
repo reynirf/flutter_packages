@@ -30,6 +30,7 @@ public class AppinioSocialSharePlugin implements FlutterPlugin, MethodCallHandle
     private final String INSTAGRAM_FEED_FILES = "instagram_post_files";
     private final String INSTAGRAM_STORIES = "instagram_stories";
     private final String FACEBOOK = "facebook";
+    private final String FACEBOOK_LINK = "facebook_link";
     private final String MESSENGER = "messenger";
     private final String FACEBOOK_STORIES = "facebook_stories";
     private final String WHATSAPP_ANDROID = "whatsapp_android";
