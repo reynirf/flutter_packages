@@ -335,6 +335,11 @@ public class ShareUtil{
             content: content,
             delegate: delegate
         )
+         do {
+            try dialog.validate()
+        } catch {
+           result(ERROR)
+        }
         dialog.show()
         result(self.SUCCESS)
     }
@@ -393,23 +398,41 @@ public class ShareUtil{
     
     
     
-    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult){
-        if #available(iOS 10, *){
-            let message = args[self.argMessage] as? String
-            let urlString = "fb-messenger://share/?link=\(message!)"
-            if(!canOpenUrl(appName: "fb-messenger")){
-                result(ERROR_APP_NOT_AVAILABLE)
-                return
-            }
-            if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                result(SUCCESS)
-            }else{
-                result(ERROR)
-            }
-        }else{
-            result(ERROR_FEATURE_NOT_AVAILABLE_FOR_THIS_VERSON)
+    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult) {
+        // if #available(iOS 10, *){
+        //     let message = args[self.argMessage] as? String
+        //     let urlString = "fb-messenger://share/?link=\(message!)"
+        //     if(!canOpenUrl(appName: "fb-messenger")){
+        //         result(ERROR_APP_NOT_AVAILABLE)
+        //         return
+        //     }
+        //     if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!) {
+        //         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        //         result(SUCCESS)
+        //     }else{
+        //         result(ERROR)
+        //     }
+        // }else{
+        //     result(ERROR_FEATURE_NOT_AVAILABLE_FOR_THIS_VERSON)
+        // }
+        let message = args[self.argMessage] as? String
+        guard let url = URL(string: message) else {
+            result(ERROR)
+            return
         }
+
+        let content = ShareLinkContent()
+        content.contentURL = url
+
+        let dialog = MessageDialog(content: content, delegate: self)
+
+        do {
+            try dialog.validate()
+        } catch {
+            print(error)
+        }
+
+        dialog.show()
     }
     
     public func shareToSms(args : [String: Any?],result: @escaping FlutterResult){
