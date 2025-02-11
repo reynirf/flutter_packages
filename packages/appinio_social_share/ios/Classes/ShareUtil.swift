@@ -397,8 +397,8 @@ public class ShareUtil{
     
     
     
-    
-    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate){
+        
+    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult, delegate: MessageDelegate){
         // if #available(iOS 10, *){
         //     let message = args[self.argMessage] as? String
         //     let urlString = "fb-messenger://share/?link=\(message!)"

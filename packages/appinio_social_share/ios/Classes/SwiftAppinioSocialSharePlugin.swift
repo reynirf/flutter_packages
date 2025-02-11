@@ -6,7 +6,7 @@ import Photos
 
 
 
-public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDelegate {
+public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDelegate, MessageDelegate {
 
     private let INSTAGRAM_DIRECT:String = "instagram_direct";
     private let INSTAGRAM_STORIES:String = "instagram_stories";
