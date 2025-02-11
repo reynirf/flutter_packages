@@ -398,7 +398,7 @@ public class ShareUtil{
     
     
     
-    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult) {
+    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate){ {
         // if #available(iOS 10, *){
         //     let message = args[self.argMessage] as? String
         //     let urlString = "fb-messenger://share/?link=\(message!)"
@@ -415,7 +415,11 @@ public class ShareUtil{
         // }else{
         //     result(ERROR_FEATURE_NOT_AVAILABLE_FOR_THIS_VERSON)
         // }
-        let message = args[self.argMessage] as? String
+        guard let message = args[self.argMessage] as? String, let url = URL(string: message) else {
+            result(ERROR)
+            return
+        }
+
         guard let url = URL(string: message) else {
             result(ERROR)
             return
