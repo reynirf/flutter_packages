@@ -306,7 +306,9 @@ public class ShareUtil{
             photos.append(photo)
         }
         content.photos = photos
-        content.contentUrl = message;
+        if let message = message, let url = URL(string: message) {
+            content.contentURL = url
+        }
         content.pageID = pageId;
         let dialog = ShareDialog(
             viewController: UIApplication.shared.windows.first!.rootViewController,
