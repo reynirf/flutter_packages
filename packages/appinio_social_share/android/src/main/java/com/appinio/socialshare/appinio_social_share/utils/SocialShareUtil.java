@@ -266,7 +266,7 @@ public class SocialShareUtil {
         });
 
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(link))
+                .setContentUrl(Uri.parse(text))
                 .setPageId(pageId)
                 .build();
 
