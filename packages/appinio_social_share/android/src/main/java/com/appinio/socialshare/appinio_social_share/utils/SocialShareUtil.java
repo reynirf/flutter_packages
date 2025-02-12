@@ -302,7 +302,7 @@ public class SocialShareUtil {
         });
         ShareLinkContent content = new ShareLinkContent.Builder()
                 .setPageId(pageId)
-                .setContentUrl(Uri.parse(text))0000w
+                .setContentUrl(Uri.parse(text))
                 .build();
         if (ShareDialog.canShow(SharePhotoContent.class)) {
             shareDialog.show(content);
