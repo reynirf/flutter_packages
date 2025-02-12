@@ -42,9 +42,16 @@ class IOS {
 
   /// Sharing photos with hashtag.
   /// It does not allow sharing just a hastag without photos.
-  Future<String> shareToFacebook(String hashtag, List<String> filePaths) {
-    return AppinioSocialSharePlatform.instance
-        .shareToFacebook(hashtag, filePaths);
+  Future<String> shareToFacebook(
+    String url,
+    List<String> filePaths, {
+    String? pageId,
+  }) {
+    return AppinioSocialSharePlatform.instance.shareToFacebook(
+      url,
+      filePaths,
+      pageId: pageId,
+    );
   }
 
   /// Sharing link.

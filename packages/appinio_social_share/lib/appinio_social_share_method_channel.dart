@@ -289,9 +289,13 @@ class MethodChannelAppinioSocialShare extends AppinioSocialSharePlatform {
   }
 
   @override
-  Future<String> shareToFacebook(String hashtag, List<String> filePaths) async {
-    return ((await methodChannel.invokeMethod<String>(
-            facebook, {"imagePaths": filePaths, "message": hashtag})) ??
+  Future<String> shareToFacebook(
+    String url,
+    List<String> filePaths, {
+    String? pageId,
+  }) async {
+    return ((await methodChannel.invokeMethod<String>(facebook,
+            {"imagePaths": filePaths, "message": url, "pageId": pageId})) ??
         "");
   }
 

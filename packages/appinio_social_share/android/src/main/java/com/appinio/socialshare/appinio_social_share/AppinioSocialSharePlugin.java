@@ -79,6 +79,7 @@ public class AppinioSocialSharePlugin implements FlutterPlugin, MethodCallHandle
         activeContext = (activity != null) ? activity.getApplicationContext() : context;
         String title = call.argument("title");
         String message = call.argument("message");
+        String pageId = call.argument("pageId");
         String appId = call.argument("appId");
         ArrayList<String> imagePaths = call.argument("imagePaths");
         String stickerImage = call.argument("stickerImage");
@@ -108,7 +109,7 @@ public class AppinioSocialSharePlugin implements FlutterPlugin, MethodCallHandle
                 return socialShareUtil.shareToMessenger(message, activeContext);
             case FACEBOOK:
                 if (activity == null) return SocialShareUtil.UNKNOWN_ERROR;
-                socialShareUtil.shareToFacebook(imagePaths, message, activity, result);
+                socialShareUtil.shareToFacebook(imagePaths, message, pageId, activity, result);
                 return null;
             case FACEBOOK_LINK:
                 if (activity == null) return SocialShareUtil.UNKNOWN_ERROR;

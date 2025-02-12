@@ -6,7 +6,7 @@ import Photos
 
 
 
-public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDelegate, MessageDelegate {
+public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDelegate {
 
     private let INSTAGRAM_DIRECT:String = "instagram_direct";
     private let INSTAGRAM_STORIES:String = "instagram_stories";
@@ -85,7 +85,7 @@ public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDele
           shareUtil.shareToTelegram(args:args!, result:result)
           break
       case MESSENGER:
-          shareUtil.shareToMessenger(args: args!, result: result, delegate: self)
+          shareUtil.shareToMessenger(args: args!, result: result)
           break
       default:
           result(shareUtil.ERROR)

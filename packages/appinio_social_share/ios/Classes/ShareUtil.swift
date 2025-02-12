@@ -20,6 +20,7 @@ public class ShareUtil{
     let argbackgroundImage: String  = "backgroundImage";
     let argMessage: String  = "message";
     let argTitle: String  = "title";
+    let argPageId: String  = "pageId";
     let argstickerImage: String  = "stickerImage";
     let argAppId: String  = "appId";
     let argBackgroundTopColor: String  = "backgroundTopColor";
@@ -296,6 +297,7 @@ public class ShareUtil{
     func shareToFacebookPost(args : [String: Any?],result: @escaping FlutterResult, delegate: SharingDelegate) {
         let message = args[self.argMessage] as? String
         let imagePaths = args[self.argImagePaths] as? [String]
+        let pageId = args[self.argPageId] as? String
         
         let content = SharePhotoContent()
         var photos : [SharePhoto] = []
@@ -304,7 +306,8 @@ public class ShareUtil{
             photos.append(photo)
         }
         content.photos = photos
-        content.hashtag = Hashtag(message!)
+        content.contentUrl = message;
+        content.pageID = pageId;
         let dialog = ShareDialog(
             viewController: UIApplication.shared.windows.first!.rootViewController,
             content: content,
@@ -398,45 +401,45 @@ public class ShareUtil{
     
     
         
-    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult, delegate: MessageDelegate){
-        // if #available(iOS 10, *){
-        //     let message = args[self.argMessage] as? String
-        //     let urlString = "fb-messenger://share/?link=\(message!)"
-        //     if(!canOpenUrl(appName: "fb-messenger")){
-        //         result(ERROR_APP_NOT_AVAILABLE)
-        //         return
-        //     }
-        //     if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!) {
-        //         UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        //         result(SUCCESS)
-        //     }else{
-        //         result(ERROR)
-        //     }
-        // }else{
-        //     result(ERROR_FEATURE_NOT_AVAILABLE_FOR_THIS_VERSON)
+    public func shareToMessenger(args : [String: Any?],result: @escaping FlutterResult){
+        if #available(iOS 10, *){
+            let message = args[self.argMessage] as? String
+            let urlString = "fb-messenger://share/?link=\(message!)"
+            if(!canOpenUrl(appName: "fb-messenger")){
+                result(ERROR_APP_NOT_AVAILABLE)
+                return
+            }
+            if let url = URL(string: urlString.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                result(SUCCESS)
+            }else{
+                result(ERROR)
+            }
+        }else{
+            result(ERROR_FEATURE_NOT_AVAILABLE_FOR_THIS_VERSON)
+        }
+        // guard let message = args[self.argMessage] as? String, let url = URL(string: message) else {
+        //     result(ERROR)
+        //     return
         // }
-        guard let message = args[self.argMessage] as? String, let url = URL(string: message) else {
-            result(ERROR)
-            return
-        }
 
-        guard let url = URL(string: message) else {
-            result(ERROR)
-            return
-        }
+        // guard let url = URL(string: message) else {
+        //     result(ERROR)
+        //     return
+        // }
 
-        let content = ShareLinkContent()
-        content.contentURL = url
+        // let content = ShareLinkContent()
+        // content.contentURL = url
 
-        let dialog = MessageDialog(content: content, delegate: self)
+        // let dialog = MessageDialog(content: content, delegate: self)
 
-        do {
-            try dialog.validate()
-        } catch {
-            print(error)
-        }
+        // do {
+        //     try dialog.validate()
+        // } catch {
+        //     print(error)
+        // }
 
-        dialog.show()
+        // dialog.show()
     }
     
     public func shareToSms(args : [String: Any?],result: @escaping FlutterResult){
