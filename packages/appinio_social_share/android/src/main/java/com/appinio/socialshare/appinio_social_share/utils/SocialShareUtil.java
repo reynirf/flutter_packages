@@ -109,53 +109,6 @@ public class SocialShareUtil {
     }
 
 
-    public String shareToMessenger(String text, String pageId, Context activity) {
-        // Map<String, Boolean> apps = getInstalledApps(activity);
-        // String packageName;
-        // if (apps.get("messenger")) {
-        //     packageName = FACEBOOK_MESSENGER_PACKAGE;
-        // } else if (apps.get("messenger-lite")) {
-        //     packageName = FACEBOOK_MESSENGER_LITE_PACKAGE;
-        // } else {
-        //     return ERROR_APP_NOT_AVAILABLE;
-        // }
-        // return shareTextToPackage(text, activity, packageName);
-
-
-        FacebookSdk.fullyInitialize();
-        FacebookSdk.setApplicationId(getFacebookAppId(activity));
-        callbackManager = callbackManager == null ? CallbackManager.Factory.create() : callbackManager;
-        MessageDialog messageDialog = new MessageDialog(activity);
-        messageDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
-            @Override
-            public void onSuccess(Sharer.Result result1) {
-                System.out.println("---------------onSuccess");
-                result.success(SUCCESS);
-            }
-
-            @Override
-            public void onCancel() {
-                result.success(ERROR_CANCELLED);
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                System.out.println("---------------onError");
-                result.success(error.getLocalizedMessage());
-            }
-        });
-
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(link))
-                .setPageId(pageId)
-                .build();
-
-        if (MessageDialog.canShow(ShareLinkContent.class)) {
-            messageDialog.show(content);
-        }
-    }
-
-
     public String copyToClipBoard(String content, Context activity) {
         try {
             ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -274,6 +227,52 @@ public class SocialShareUtil {
             return e.getLocalizedMessage();
         }
 
+    }
+
+    public String shareToMessenger(String text, String pageId, Context activity, MethodChannel.Result result) {
+        // Map<String, Boolean> apps = getInstalledApps(activity);
+        // String packageName;
+        // if (apps.get("messenger")) {
+        //     packageName = FACEBOOK_MESSENGER_PACKAGE;
+        // } else if (apps.get("messenger-lite")) {
+        //     packageName = FACEBOOK_MESSENGER_LITE_PACKAGE;
+        // } else {
+        //     return ERROR_APP_NOT_AVAILABLE;
+        // }
+        // return shareTextToPackage(text, activity, packageName);
+
+
+        FacebookSdk.fullyInitialize();
+        FacebookSdk.setApplicationId(getFacebookAppId(activity));
+        callbackManager = callbackManager == null ? CallbackManager.Factory.create() : callbackManager;
+        MessageDialog messageDialog = new MessageDialog(activity);
+        messageDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+            @Override
+            public void onSuccess(Sharer.Result result1) {
+                System.out.println("---------------onSuccess");
+                result.success(SUCCESS);
+            }
+
+            @Override
+            public void onCancel() {
+                result.success(ERROR_CANCELLED);
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                System.out.println("---------------onError");
+                result.success(error.getLocalizedMessage());
+            }
+        });
+
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(link))
+                .setPageId(pageId)
+                .build();
+
+        if (MessageDialog.canShow(ShareLinkContent.class)) {
+            messageDialog.show(content);
+        }
     }
 
 
