@@ -85,7 +85,7 @@ public class SwiftAppinioSocialSharePlugin: NSObject, FlutterPlugin, SharingDele
           shareUtil.shareToTelegram(args:args!, result:result)
           break
       case MESSENGER:
-          shareUtil.shareToMessenger(args: args!, result: result)
+          shareUtil.shareToMessenger(args: args!, result: result, delegate: self)
           break
       default:
           result(shareUtil.ERROR)
