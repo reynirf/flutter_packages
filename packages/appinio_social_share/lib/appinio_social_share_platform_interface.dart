@@ -49,7 +49,10 @@ abstract class AppinioSocialSharePlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<String> shareToMessenger(String message) {
+  Future<String> shareToMessenger(
+    String message, {
+    String? pageId,
+  }) {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
@@ -74,8 +77,7 @@ abstract class AppinioSocialSharePlatform extends PlatformInterface {
   }
 
   Future<String> shareToFacebook(
-    String url,
-    List<String> filePaths, {
+    String url, {
     String? pageId,
   }) {
     throw UnimplementedError('platformVersion() has not been implemented.');

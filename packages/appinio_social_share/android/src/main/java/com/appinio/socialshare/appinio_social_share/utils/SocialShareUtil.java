@@ -109,7 +109,7 @@ public class SocialShareUtil {
     }
 
 
-    public String shareToMessenger(String text, Context activity) {
+    public String shareToMessenger(String text, String pageId, Context activity) {
         // Map<String, Boolean> apps = getInstalledApps(activity);
         // String packageName;
         // if (apps.get("messenger")) {
@@ -147,6 +147,7 @@ public class SocialShareUtil {
 
         ShareLinkContent content = new ShareLinkContent.Builder()
                 .setContentUrl(Uri.parse(link))
+                .setPageId(pageId)
                 .build();
 
         if (MessageDialog.canShow(ShareLinkContent.class)) {
@@ -276,7 +277,7 @@ public class SocialShareUtil {
     }
 
 
-    public void shareToFacebook(List<String> filePaths, String text, String pageId, Activity activity, MethodChannel.Result result) {
+    public void shareToFacebook(String text, String pageId, Activity activity, MethodChannel.Result result) {
         FacebookSdk.fullyInitialize();
         FacebookSdk.setApplicationId(getFacebookAppId(activity));
         callbackManager = callbackManager == null ? CallbackManager.Factory.create() : callbackManager;
@@ -299,13 +300,7 @@ public class SocialShareUtil {
                 result.success(error.getLocalizedMessage());
             }
         });
-        List<SharePhoto> sharePhotos = new ArrayList<>();
-        for (int i = 0; i < filePaths.size(); i++) {
-            Uri fileUri = FileProvider.getUriForFile(activity, activity.getPackageName() + ".provider", new File(filePaths.get(i)));
-            sharePhotos.add(new SharePhoto.Builder().setImageUrl(fileUri).build());
-        }
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .setPhotos(sharePhotos)
+        ShareLinkContent content = new ShareLinkContent.Builder()
                 .setPageId(pageId)
                 .setContentUrl(Uri.parse(text))0000w
                 .build();

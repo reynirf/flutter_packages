@@ -32,8 +32,14 @@ class IOS {
         .shareToInstagramFeed("", videoPath);
   }
 
-  Future<String> shareToMessenger(String message) {
-    return AppinioSocialSharePlatform.instance.shareToMessenger(message);
+  Future<String> shareToMessenger(
+    String message, {
+    String? pageId,
+  }) {
+    return AppinioSocialSharePlatform.instance.shareToMessenger(
+      message,
+      pageId: pageId,
+    );
   }
 
   Future<String> copyToClipBoard(String message) {
@@ -43,13 +49,11 @@ class IOS {
   /// Sharing photos with hashtag.
   /// It does not allow sharing just a hastag without photos.
   Future<String> shareToFacebook(
-    String url,
-    List<String> filePaths, {
+    String url, {
     String? pageId,
   }) {
     return AppinioSocialSharePlatform.instance.shareToFacebook(
       url,
-      filePaths,
       pageId: pageId,
     );
   }

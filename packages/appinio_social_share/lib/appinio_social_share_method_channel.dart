@@ -225,9 +225,12 @@ class MethodChannelAppinioSocialShare extends AppinioSocialSharePlatform {
   }
 
   @override
-  Future<String> shareToMessenger(String message) async {
-    return ((await methodChannel
-            .invokeMethod<String>(messenger, {"message": message})) ??
+  Future<String> shareToMessenger(
+    String message, {
+    String? pageId,
+  }) async {
+    return ((await methodChannel.invokeMethod<String>(
+            messenger, {"message": message, "pageId": pageId})) ??
         "");
   }
 
@@ -290,12 +293,11 @@ class MethodChannelAppinioSocialShare extends AppinioSocialSharePlatform {
 
   @override
   Future<String> shareToFacebook(
-    String url,
-    List<String> filePaths, {
+    String url, {
     String? pageId,
   }) async {
-    return ((await methodChannel.invokeMethod<String>(facebook,
-            {"imagePaths": filePaths, "message": url, "pageId": pageId})) ??
+    return ((await methodChannel.invokeMethod<String>(
+            facebook, {"message": url, "pageId": pageId})) ??
         "");
   }
 
